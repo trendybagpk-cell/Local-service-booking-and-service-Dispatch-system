@@ -1,0 +1,1288 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Karigar Express (کاریگر ایکسپریس) | Local Service Dispatch System</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+Arabic:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        urdu: ['Noto Sans Arabic', 'sans-serif']
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d',
+                        },
+                        navy: {
+                            800: '#0b132b',
+                            900: '#070a19',
+                            950: '#03050d'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        html { scroll-behavior: smooth; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        .dark ::-webkit-scrollbar-track { background: #070a19; }
+        ::-webkit-scrollbar-thumb { background: #16a34a; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #15803d; }
+        
+        .glow-emerald {
+            box-shadow: 0 0 25px -5px rgba(22, 163, 74, 0.35);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-navy-950 text-slate-800 dark:text-slate-100 flex flex-col min-h-screen font-sans antialiased selection:bg-brand-600 selection:text-white transition-colors duration-200">
+
+    <!-- TOP NAVBAR -->
+    <header class="sticky top-0 z-40 w-full backdrop-blur-md bg-white/90 dark:bg-navy-900/90 border-b border-slate-200 dark:border-slate-800/80 transition-colors shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 sm:h-20">
+                <!-- Brand Logo -->
+                <div class="flex items-center gap-3 cursor-pointer" onclick="switchView('customer-home')">
+                    <div class="bg-gradient-to-tr from-brand-700 to-brand-500 text-white p-2.5 rounded-2xl shadow-lg shadow-brand-600/30 flex items-center justify-center">
+                        <i data-lucide="wrench" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xl sm:text-2xl font-extrabold tracking-tight bg-gradient-to-r from-brand-700 via-emerald-600 to-teal-700 dark:from-brand-400 dark:to-teal-300 bg-clip-text text-transparent">Karigar Express</span>
+                            <span class="hidden sm:inline-block text-[10px] font-black px-2 py-0.5 bg-brand-100 dark:bg-brand-950/80 text-brand-800 dark:text-brand-300 rounded-md border border-brand-300 dark:border-brand-800 uppercase tracking-wide">
+                                🇵🇰 Pakistan
+                            </span>
+                        </div>
+                        <p class="text-[11px] font-bold text-slate-500 dark:text-slate-400 font-urdu -mt-1">کاریگر ایکسپریس - آن لائن سروس ڈسپیچ</p>
+                    </div>
+                </div>
+
+                <!-- Navigation Tabs (Desktop) -->
+                <nav class="hidden md:flex items-center space-x-1 lg:space-x-2">
+                    <button onclick="switchView('customer-home')" id="nav-customer-home" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all text-slate-600 hover:text-brand-600 dark:text-slate-300 dark:hover:text-white flex items-center gap-2">
+                        <i data-lucide="grid" class="w-4 h-4"></i> Services / سروسز
+                    </button>
+                    <button onclick="switchView('customer-tracking')" id="nav-customer-tracking" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all text-slate-600 hover:text-brand-600 dark:text-slate-300 dark:hover:text-white flex items-center gap-2">
+                        <i data-lucide="map-pin" class="w-4 h-4"></i> Live Tracking / ٹریکنگ
+                    </button>
+                    <div class="h-5 w-px bg-slate-200 dark:bg-slate-800 mx-2"></div>
+                    <button onclick="switchView('admin-dashboard')" id="nav-admin-dashboard" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all text-brand-800 dark:text-brand-300 bg-brand-50 dark:bg-brand-950/80 hover:bg-brand-100 dark:hover:bg-brand-900/60 border border-brand-200 dark:border-brand-800/80 flex items-center gap-2 shadow-sm">
+                        <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dispatch Center
+                    </button>
+                </nav>
+
+                <!-- Actions Right -->
+                <div class="flex items-center gap-2 sm:gap-3">
+                    <a href="tel:03001234567" class="hidden lg:inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-black text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950/50 hover:bg-red-100 dark:hover:bg-red-900/50 border border-red-200 dark:border-red-900/60 transition-all">
+                        <i data-lucide="phone-call" class="w-3.5 h-3.5 animate-bounce"></i> Helpline: 0300-1234567
+                    </a>
+
+                    <button id="theme-toggle" onclick="toggleDarkMode()" class="p-2.5 rounded-xl text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-navy-800 transition-colors border border-transparent dark:border-slate-800" title="Toggle Dark/Light Mode">
+                        <i data-lucide="sun" id="theme-icon-sun" class="w-5 h-5 hidden"></i>
+                        <i data-lucide="moon" id="theme-icon-moon" class="w-5 h-5"></i>
+                    </button>
+
+                    <button onclick="toggleMobileMenu()" class="md:hidden p-2.5 rounded-xl text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-navy-800">
+                        <i data-lucide="menu" class="w-6 h-6"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Drawer -->
+        <div id="mobile-menu" class="hidden md:hidden border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-navy-900 px-4 pt-3 pb-5 space-y-2">
+            <button onclick="switchView('customer-home'); toggleMobileMenu()" class="w-full text-left px-4 py-3 rounded-xl text-slate-700 dark:text-slate-200 font-bold hover:bg-slate-100 dark:hover:bg-navy-800 flex items-center gap-3 text-sm">
+                <i data-lucide="grid" class="w-4 h-4 text-brand-600"></i> All Services / تمام سروسز
+            </button>
+            <button onclick="switchView('customer-tracking'); toggleMobileMenu()" class="w-full text-left px-4 py-3 rounded-xl text-slate-700 dark:text-slate-200 font-bold hover:bg-slate-100 dark:hover:bg-navy-800 flex items-center gap-3 text-sm">
+                <i data-lucide="map-pin" class="w-4 h-4 text-brand-600"></i> Track Booking / اسٹیٹس چیک کریں
+            </button>
+            <div class="border-t border-slate-200 dark:border-slate-800 my-1"></div>
+            <button onclick="switchView('admin-dashboard'); toggleMobileMenu()" class="w-full text-left px-4 py-3 rounded-xl text-brand-800 dark:text-brand-300 font-bold bg-brand-50 dark:bg-brand-950/80 flex items-center gap-3 text-sm">
+                <i data-lucide="layout-dashboard" class="w-4 h-4 text-brand-600"></i> Dispatch Center / کنٹرول ڈیش بورڈ
+            </button>
+            <a href="tel:03001234567" class="w-full text-center py-2.5 px-4 rounded-xl text-xs font-black text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950/50 block border border-red-200 dark:border-red-900/60 mt-2">
+                🚨 Emergency Dispatch: 0300-1234567
+            </a>
+        </div>
+    </header>
+
+    <!-- MAIN BODY CONTAINER -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8">
+
+        <!-- ========================================== -->
+        <!-- VIEW 1: SERVICE CATALOG & CUSTOMER HERO    -->
+        <!-- ========================================== -->
+        <section id="view-customer-home" class="space-y-8 transition-opacity duration-200">
+            <!-- Hero Banner -->
+            <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-navy-900 via-slate-900 to-brand-950 text-white p-6 sm:p-10 lg:p-12 shadow-2xl border border-slate-800">
+                <div class="relative z-10 max-w-2xl space-y-4">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold bg-brand-500/20 text-brand-300 border border-brand-500/30 backdrop-blur-sm">
+                        <span class="w-2 h-2 rounded-full bg-brand-400 animate-pulse"></span> Instant Dispatch in Karachi, Lahore, Islamabad & Rawalpindi
+                    </div>
+                    <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-tight">
+                        گھر پر تصدیق شدہ کاریگر آن لائن بک کریں
+                        <span class="block text-brand-400 text-2xl sm:text-3xl lg:text-4xl mt-1 font-sans font-extrabold">Instant Technician Dispatch at Fixed PKR Rates</span>
+                    </h1>
+                    <p class="text-slate-300 text-xs sm:text-sm leading-relaxed">
+                        Electrician, Plumber, AC Repair, Solar Technician, Carpenter, Painter, or Appliance Expert. Certified experts dispatched directly to your doorstep with guaranteed transparent pricing.
+                    </p>
+                    <div class="pt-2 flex flex-wrap gap-3">
+                        <button onclick="openBookingModal()" class="px-6 py-3.5 rounded-2xl bg-brand-600 hover:bg-brand-500 text-white font-extrabold text-sm shadow-xl shadow-brand-600/30 transition-all flex items-center gap-2">
+                            <i data-lucide="calendar-plus" class="w-4 h-4"></i> Book Instant Karigar (ابھی بک کریں)
+                        </button>
+                        <button onclick="switchView('customer-tracking')" class="px-6 py-3.5 rounded-2xl bg-slate-800/90 hover:bg-slate-700 text-slate-200 font-bold text-sm border border-slate-700 transition-all flex items-center gap-2">
+                            <i data-lucide="search" class="w-4 h-4 text-brand-400"></i> Track Existing Booking
+                        </button>
+                    </div>
+                </div>
+                <!-- Graphic Overlay -->
+                <div class="absolute -right-16 -bottom-16 w-96 h-96 bg-brand-500/10 rounded-full blur-3xl pointer-events-none"></div>
+            </div>
+
+            <!-- Service Search & Category Bar -->
+            <div class="space-y-4">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                        <h2 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white flex items-center gap-2">
+                            Available Service Categories <span class="text-xs font-normal text-slate-500 dark:text-slate-400 font-urdu">(تمام سروسز)</span>
+                        </h2>
+                        <p class="text-xs text-slate-500 dark:text-slate-400">Select a category or search for specific household fix</p>
+                    </div>
+
+                    <!-- Search Input -->
+                    <div class="relative w-full sm:w-80">
+                        <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                        <input type="text" id="service-search" onkeyup="filterServices()" placeholder="Search Electrician, AC, Solar, Plumber..." class="w-full pl-10 pr-4 py-2.5 text-sm bg-white dark:bg-navy-900 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-2 focus:ring-brand-500 focus:outline-none transition-all shadow-sm">
+                    </div>
+                </div>
+
+                <!-- Category Pills -->
+                <div id="category-pills" class="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+                    <!-- Dynamic Pills -->
+                </div>
+            </div>
+
+            <!-- Service Grid -->
+            <div id="services-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Dynamically populated -->
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 2: BOOKING MODAL                      -->
+        <!-- ========================================== -->
+        <div id="booking-modal" class="fixed inset-0 z-50 hidden bg-slate-950/70 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+            <div class="bg-white dark:bg-navy-900 border border-slate-200 dark:border-slate-800 max-w-2xl w-full rounded-3xl p-6 sm:p-8 shadow-2xl my-auto space-y-6 relative animate-in fade-in zoom-in duration-200">
+                
+                <!-- Close Button -->
+                <button onclick="closeBookingModal()" class="absolute right-5 top-5 p-2 text-slate-400 hover:text-slate-700 dark:hover:text-white rounded-full bg-slate-100 dark:bg-navy-800 transition-colors">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+
+                <div class="border-b border-slate-100 dark:border-slate-800 pb-4">
+                    <div class="inline-flex items-center gap-1.5 px-3 py-1 bg-brand-100 dark:bg-brand-950 text-brand-800 dark:text-brand-300 rounded-full text-xs font-bold mb-2">
+                        <i data-lucide="shield-check" class="w-3.5 h-3.5"></i> Karigar Express Guarantee
+                    </div>
+                    <h2 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">
+                        Book Certified Technician (کاریگر کی آن لائن بکنگ)
+                    </h2>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Fill in your location and timing for immediate dispatch assignment</p>
+                </div>
+
+                <form id="booking-form" onsubmit="handleBookingSubmit(event)" class="space-y-5">
+                    
+                    <!-- Service Select & Sub-service -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="space-y-1.5">
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">Service Category</label>
+                            <select id="form-service-select" onchange="onCategoryChange()" required class="w-full px-4 py-3 bg-slate-50 dark:bg-navy-800 border border-slate-200 dark:border-slate-700 rounded-2xl text-sm font-bold text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                                <!-- Populated dynamically -->
+                            </select>
+                        </div>
+                        <div class="space-y-1.5">
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">Sub-Service / Specific Work</label>
+                            <select id="form-subservice-select" onchange="calculateEstimatedCost()" required class="w-full px-4 py-3 bg-slate-50 dark:bg-navy-800 border border-slate-200 dark:border-slate-700 rounded-2xl text-sm font-bold text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                                <!-- Populated dynamically -->
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Dispatch Mode (Express Toggle) -->
+                    <div class="space-y-2">
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">Dispatch Speed</label>
+                        <div class="grid grid-cols-2 gap-3">
+                            <label class="relative flex flex-col p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 cursor-pointer bg-slate-50 dark:bg-navy-800/50 hover:border-brand-500 transition-all">
+                                <input type="radio" name="urgency" value="standard" checked onchange="calculateEstimatedCost()" class="sr-only peer">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-100">Standard Scheduled</span>
+                                    <i data-lucide="clock" class="w-4 h-4 text-slate-400 peer-checked:text-brand-500"></i>
+                                </div>
+                                <span class="text-[11px] text-slate-500 dark:text-slate-400 mt-1">Normal appointment timing</span>
+                                <div class="absolute inset-0 rounded-2xl border-2 border-transparent peer-checked:border-brand-500 pointer-events-none"></div>
+                            </label>
+
+                            <label class="relative flex flex-col p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 cursor-pointer bg-slate-50 dark:bg-navy-800/50 hover:border-red-500 transition-all">
+                                <input type="radio" name="urgency" value="express" onchange="calculateEstimatedCost()" class="sr-only peer">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-xs sm:text-sm font-bold text-red-600 dark:text-red-400 flex items-center gap-1">
+                                        🚀 Express (45-Min Dispatch)
+                                    </span>
+                                </div>
+                                <span class="text-[11px] font-bold text-red-500 mt-1">+Rs. 500 Express Dispatch Fee</span>
+                                <div class="absolute inset-0 rounded-2xl border-2 border-transparent peer-checked:border-red-500 pointer-events-none"></div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Date & Time Slot -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="space-y-1">
+                            <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400">Service Date</label>
+                            <input type="date" id="form-date" required class="w-full px-4 py-2.5 bg-slate-50 dark:bg-navy-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-medium focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400">Preferred Time Slot</label>
+                            <select id="form-time" required class="w-full px-4 py-2.5 bg-slate-50 dark:bg-navy-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-medium focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                                <option value="ASAP / Express Slot">ASAP / Urgent Arrival</option>
+                                <option value="10:00 AM - 12:00 PM">10:00 AM - 12:00 PM</option>
+                                <option value="02:00 PM - 04:00 PM">02:00 PM - 04:00 PM</option>
+                                <option value="05:00 PM - 07:00 PM">05:00 PM - 07:00 PM</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Location & Contact Info -->
+                    <div class="space-y-3 pt-2 border-t border-slate-100 dark:border-slate-800">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="space-y-1">
+                                <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400">Customer Full Name</label>
+                                <input type="text" id="form-name" required placeholder="e.g. Tariq Mehmood" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-navy-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                            </div>
+                            <div class="space-y-1">
+                                <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400">Phone / WhatsApp Number</label>
+                                <input type="tel" id="form-phone" required placeholder="0300-1234567" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-navy-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <div class="space-y-1">
+                                <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400">City</label>
+                                <select id="form-city" onchange="onCityChange()" class="w-full px-3 py-2.5 bg-slate-50 dark:bg-navy-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none font-bold">
+                                    <option value="Karachi">Karachi (کراچی)</option>
+                                    <option value="Lahore">Lahore (لاہور)</option>
+                                    <option value="Islamabad">Islamabad (اسلام آباد)</option>
+                                    <option value="Rawalpindi">Rawalpindi (راولپنڈی)</option>
+                                </select>
+                            </div>
+                            <div class="space-y-1">
+                                <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400">Area / Sector</label>
+                                <select id="form-area" class="w-full px-3 py-2.5 bg-slate-50 dark:bg-navy-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none font-medium">
+                                    <!-- Populated based on city -->
+                                </select>
+                            </div>
+                            <div class="space-y-1">
+                                <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400">Street / House No.</label>
+                                <input type="text" id="form-address" required placeholder="House 42, Street 5" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-navy-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                            </div>
+                        </div>
+
+                        <div class="space-y-1">
+                            <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400">Work Description / Issues (کام کی تفصیل)</label>
+                            <textarea id="form-notes" rows="2" placeholder="e.g., Short circuit in main DB box, or 1.5 ton split AC outdoor unit not turning on..." class="w-full px-4 py-2.5 bg-slate-50 dark:bg-navy-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Instant Price Calculator Box -->
+                    <div id="cost-breakdown-box" class="p-4 bg-brand-50/80 dark:bg-brand-950/40 rounded-2xl border border-brand-200 dark:border-brand-800/80 space-y-2">
+                        <!-- Populated by JS -->
+                    </div>
+
+                    <button type="submit" class="w-full py-4 px-6 rounded-2xl bg-brand-600 hover:bg-brand-500 text-white font-extrabold text-sm shadow-xl shadow-brand-600/30 transition-all flex items-center justify-center gap-2">
+                        <i data-lucide="check-circle-2" class="w-5 h-5"></i> Confirm Booking & Dispatch (بکنگ مکمل کریں)
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- VIEW 3: LIVE TRACKING & STATUS TIMELINE    -->
+        <!-- ========================================== -->
+        <section id="view-customer-tracking" class="hidden space-y-6 max-w-3xl mx-auto">
+            <div class="text-center space-y-2">
+                <h2 class="text-3xl font-black text-slate-900 dark:text-white">Live Booking Tracking</h2>
+                <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">اپنی بکنگ ٹریک کرنے کے لیے ذیل میں کوڈ درج کریں</p>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="bg-white dark:bg-navy-900 p-3 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xl flex items-center gap-2">
+                <div class="relative flex-grow">
+                    <i data-lucide="hash" class="w-5 h-5 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                    <input type="text" id="tracking-input" placeholder="e.g. KRG-9482 or KRG-1024" class="w-full pl-10 pr-4 py-3 bg-slate-50 dark:bg-navy-800 border-none rounded-xl text-slate-900 dark:text-white font-mono uppercase text-sm font-black focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                </div>
+                <button onclick="trackBooking()" class="px-6 py-3 bg-brand-600 hover:bg-brand-500 text-white font-extrabold text-sm rounded-xl transition-all flex items-center gap-2 shrink-0">
+                    <i data-lucide="search" class="w-4 h-4"></i> Track
+                </button>
+            </div>
+
+            <!-- Result Box -->
+            <div id="tracking-result" class="hidden space-y-6">
+                <!-- Dynamically populated -->
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 4: DISPATCHER & ADMIN DASHBOARD       -->
+        <!-- ========================================== -->
+        <section id="view-admin-dashboard" class="hidden space-y-8">
+            <!-- Alert Header Banner -->
+            <div class="p-4 bg-gradient-to-r from-brand-950 via-navy-900 to-slate-900 text-white border border-brand-800/80 rounded-3xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xl">
+                <div class="flex items-center gap-3">
+                    <div class="p-3 bg-brand-500/20 rounded-2xl border border-brand-500/30">
+                        <i data-lucide="radio" class="w-6 h-6 text-brand-400 animate-pulse"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-extrabold text-base text-white">Live Dispatcher Command Center</h3>
+                        <p class="text-xs text-slate-300">Oversee incoming requests, reassign field Karigars, and manage job statuses in real-time.</p>
+                    </div>
+                </div>
+                <button onclick="seedSampleBooking()" class="px-4 py-2.5 bg-brand-500 hover:bg-brand-400 text-slate-950 font-black text-xs rounded-xl shadow-lg transition-all flex items-center gap-2 shrink-0">
+                    <i data-lucide="plus-circle" class="w-4 h-4"></i> Simulate Express Job
+                </button>
+            </div>
+
+            <!-- Key Metrics Grid -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-white dark:bg-navy-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Total Bookings</p>
+                        <p class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white mt-1" id="stat-total-bookings">0</p>
+                    </div>
+                    <div class="p-3 bg-brand-50 dark:bg-brand-950/80 text-brand-600 dark:text-brand-400 rounded-2xl">
+                        <i data-lucide="clipboard-list" class="w-6 h-6"></i>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-navy-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Active Dispatches</p>
+                        <p class="text-2xl sm:text-3xl font-black text-amber-500 mt-1" id="stat-active-dispatches">0</p>
+                    </div>
+                    <div class="p-3 bg-amber-50 dark:bg-amber-950/80 text-amber-500 rounded-2xl">
+                        <i data-lucide="navigation-2" class="w-6 h-6"></i>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-navy-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Available Karigars</p>
+                        <p class="text-2xl sm:text-3xl font-black text-teal-500 mt-1" id="stat-techs-available">0</p>
+                    </div>
+                    <div class="p-3 bg-teal-50 dark:bg-teal-950/80 text-teal-500 rounded-2xl">
+                        <i data-lucide="users" class="w-6 h-6"></i>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-navy-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Today's Revenue</p>
+                        <p class="text-xl sm:text-2xl font-black text-brand-600 dark:text-brand-400 mt-1" id="stat-total-revenue">Rs. 0</p>
+                    </div>
+                    <div class="p-3 bg-brand-50 dark:bg-brand-950/80 text-brand-600 dark:text-brand-400 rounded-2xl">
+                        <i data-lucide="banknote" class="w-6 h-6"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dispatch Table -->
+            <div class="bg-white dark:bg-navy-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+                <div class="p-5 border-b border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                        <h3 class="text-lg font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+                            <i data-lucide="list-checks" class="w-5 h-5 text-brand-600"></i> Dispatch Management Board
+                        </h3>
+                        <p class="text-xs text-slate-500 dark:text-slate-400">Real-time tracking status and technician allocation</p>
+                    </div>
+
+                    <!-- Status Filter Tabs -->
+                    <div class="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
+                        <button onclick="filterAdminTable('ALL')" id="admin-filter-ALL" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-brand-600 text-white transition-all">All Jobs</button>
+                        <button onclick="filterAdminTable('Requested')" id="admin-filter-Requested" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-navy-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 transition-all">Requested</button>
+                        <button onclick="filterAdminTable('Tech Assigned')" id="admin-filter-TechAssigned" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-navy-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 transition-all">Assigned</button>
+                        <button onclick="filterAdminTable('On the Way')" id="admin-filter-OntheWay" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-navy-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 transition-all">On the Way</button>
+                        <button onclick="filterAdminTable('Work In Progress')" id="admin-filter-WorkInProgress" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-navy-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 transition-all">In Progress</button>
+                        <button onclick="filterAdminTable('Completed')" id="admin-filter-Completed" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-navy-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 transition-all">Completed</button>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-50 dark:bg-navy-800/60 text-[11px] font-black uppercase tracking-wider text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-slate-800">
+                                <th class="py-4 px-4">Tracking Code & Client</th>
+                                <th class="py-4 px-4">Service & Sub-service</th>
+                                <th class="py-4 px-4">Location</th>
+                                <th class="py-4 px-4">Speed & Cost</th>
+                                <th class="py-4 px-4">Assign Karigar</th>
+                                <th class="py-4 px-4">Dispatch Status</th>
+                                <th class="py-4 px-4 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-dispatches-tbody" class="divide-y divide-slate-100 dark:divide-slate-800/80 text-xs sm:text-sm">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Technician Management Roster -->
+            <div class="space-y-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h3 class="text-xl font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+                            <i data-lucide="users" class="w-5 h-5 text-brand-600"></i> Registered Field Karigars (کاریگروں کا نیٹ ورک)
+                        </h3>
+                        <p class="text-xs text-slate-500 dark:text-slate-400">Manage field staff status, skill sets, and assigned zones</p>
+                    </div>
+                </div>
+
+                <div id="tech-roster-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <!-- Dynamic rendering -->
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- CONFIRMATION MODAL -->
+    <div id="confirmation-modal" class="fixed inset-0 z-50 hidden bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-navy-900 border border-slate-200 dark:border-slate-800 max-w-md w-full rounded-3xl p-6 sm:p-8 shadow-2xl space-y-5 text-center animate-in fade-in zoom-in duration-200">
+            <div class="w-16 h-16 rounded-full bg-brand-100 dark:bg-brand-950 text-brand-600 dark:text-brand-400 flex items-center justify-center mx-auto border border-brand-300 dark:border-brand-800">
+                <i data-lucide="check" class="w-8 h-8"></i>
+            </div>
+
+            <div class="space-y-1">
+                <h3 class="text-2xl font-black text-slate-900 dark:text-white">بکنگ کی درخواست موصول ہو گئی!</h3>
+                <p class="text-xs text-slate-500 dark:text-slate-400">Your service booking has been placed in our live dispatch queue.</p>
+            </div>
+
+            <div class="bg-slate-50 dark:bg-navy-800/80 p-4 rounded-2xl border border-slate-200 dark:border-slate-700/80 space-y-2">
+                <p class="text-xs uppercase font-bold text-slate-400">Unique Tracking Code</p>
+                <div class="flex items-center justify-center gap-2">
+                    <span id="modal-tracking-id" class="font-mono text-2xl font-black text-brand-600 dark:text-brand-400 tracking-wider">KRG-9482</span>
+                    <button onclick="copyTrackingId()" class="p-1.5 hover:bg-slate-200 dark:hover:bg-navy-700 rounded-lg transition-colors" title="Copy Code">
+                        <i data-lucide="copy" class="w-4 h-4 text-slate-500"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="text-xs text-slate-600 dark:text-slate-300 space-y-1 text-left bg-slate-100/70 dark:bg-navy-950/50 p-3.5 rounded-xl border border-slate-200 dark:border-slate-800">
+                <p class="flex items-center gap-2">✓ Verified Karigar will be assigned shortly.</p>
+                <p class="flex items-center gap-2">✓ Cash on Completion or JazzCash/EasyPaisa accepted.</p>
+            </div>
+
+            <div class="flex gap-3 pt-2">
+                <button onclick="closeModalAndTrack()" class="flex-1 py-3.5 bg-brand-600 hover:bg-brand-500 text-white font-extrabold text-xs rounded-xl shadow-lg shadow-brand-600/20 transition-all">
+                    Track Live Dispatch
+                </button>
+                <button onclick="closeConfirmationModal()" class="px-4 py-3.5 bg-slate-100 dark:bg-navy-800 text-slate-700 dark:text-slate-300 font-bold text-xs rounded-xl transition-all">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" class="fixed bottom-5 right-5 z-50 hidden max-w-sm bg-navy-900 text-white dark:bg-white dark:text-navy-900 px-4 py-3.5 rounded-2xl shadow-2xl flex items-center gap-3 border border-slate-800 dark:border-slate-200 transition-all">
+        <i data-lucide="info" class="w-5 h-5 text-brand-400 dark:text-brand-600 shrink-0"></i>
+        <span id="toast-message" class="text-xs font-semibold">Action executed successfully.</span>
+    </div>
+
+    <!-- APPLICATION LOGIC SCRIPT -->
+    <script>
+        // --- DATA & STATE ---
+        const SERVICES_CATALOG = [
+            {
+                id: 'srv-electrician',
+                category: 'Electrician',
+                urduCategory: 'الیکٹریشن',
+                icon: 'zap',
+                basePrice: 800,
+                subServices: [
+                    { name: 'Short Circuit & Wiring Detection', price: 1200 },
+                    { name: 'UPS / Inverter Wiring Setup', price: 1500 },
+                    { name: 'Breaker Box / DB Box Installation', price: 2000 },
+                    { name: 'Fan & Light Fitting (per unit)', price: 800 }
+                ]
+            },
+            {
+                id: 'srv-plumber',
+                category: 'Plumber',
+                urduCategory: 'پلمبر',
+                icon: 'droplet',
+                basePrice: 900,
+                subServices: [
+                    { name: 'Pipe Leakage & Underground Fix', price: 1500 },
+                    { name: 'Water Tank Motor Repair & Fit', price: 1800 },
+                    { name: 'Mixer Tap & Sanitary Fitting', price: 1000 },
+                    { name: 'Gas Geyser Servicing & Ignition', price: 1400 }
+                ]
+            },
+            {
+                id: 'srv-ac',
+                category: 'AC Repair & Service',
+                urduCategory: 'اے سی مکینک',
+                icon: 'snowflake',
+                basePrice: 1500,
+                subServices: [
+                    { name: 'AC Master Chemical Service', price: 2500 },
+                    { name: 'Refrigerant Gas Leak Fix & Top-up', price: 3500 },
+                    { name: 'Inverter Compressor Capacitor Repair', price: 1800 },
+                    { name: 'Split AC Dismounting & Re-installation', price: 3000 }
+                ]
+            },
+            {
+                id: 'srv-solar',
+                category: 'Solar System Expert',
+                urduCategory: 'سولر ایکسپرٹ',
+                icon: 'sun',
+                basePrice: 2000,
+                subServices: [
+                    { name: 'Hybrid Inverter Error & Tuning', price: 3000 },
+                    { name: 'Solar Panel Array Wash & Output Check', price: 2000 },
+                    { name: 'Net Metering DB Connection Inspection', price: 2500 }
+                ]
+            },
+            {
+                id: 'srv-appliance',
+                category: 'Home Appliances',
+                urduCategory: 'ہوم اپلائنسز',
+                icon: 'cpu',
+                basePrice: 1000,
+                subServices: [
+                    { name: 'Automatic Washing Machine PCB Repair', price: 2200 },
+                    { name: 'Refrigerator / Deep Freezer Cooling Fix', price: 2500 },
+                    { name: 'Microwave Oven Magnetron Repair', price: 1500 }
+                ]
+            },
+            {
+                id: 'srv-carpenter',
+                category: 'Carpenter',
+                urduCategory: 'کارپینٹر',
+                icon: 'hammer',
+                basePrice: 1000,
+                subServices: [
+                    { name: 'Door Lock / Handle Repair', price: 1000 },
+                    { name: 'Wardrobe Slider & Cabinet Hinge Fix', price: 1600 },
+                    { name: 'Wooden Bed / Sofa Frame Repair', price: 2000 }
+                ]
+            },
+            {
+                id: 'srv-painter',
+                category: 'Painter & Polish',
+                urduCategory: 'پینٹر اور پالش',
+                icon: 'paint-bucket',
+                basePrice: 1200,
+                subServices: [
+                    { name: 'Single Room Wall Touchup Paint', price: 3500 },
+                    { name: 'Main Door Deco / Wood Polish', price: 2500 },
+                    { name: 'Seepage Wall Treatment & Primer', price: 3000 }
+                ]
+            }
+        ];
+
+        const CITIES_DATA = {
+            'Karachi': ['Gulshan-e-Iqbal', 'DHA / Clifton', 'PECHS / Bahadurabad', 'North Nazimabad', 'FB Area', 'Gulistan-e-Johar', 'Malir Cantt'],
+            'Lahore': ['Model Town', 'Gulberg III', 'DHA Phase 5/6', 'Johar Town', 'Bahria Town', 'Faisal Town', 'Askari 11'],
+            'Islamabad': ['F-6 / F-7 / F-8', 'G-10 / G-11', 'I-8 / I-9', 'DHA Phase 2', 'Bahria Town Phase 4/7', 'E-11'],
+            'Rawalpindi': ['Saddar', 'Satellite Town', 'Westridge', 'Adyala Road', 'Chaklala Scheme 3']
+        };
+
+        const TECHNICIANS = [
+            { id: 'tech-1', name: 'Ustad Tariq Ahmed', category: 'Electrician', rating: 4.9, zone: 'Gulshan / Johar (Karachi)', status: 'Available', phone: '0300-8219201', photo: 'https://images.unsplash.com/photo-1540569014015-19a7be504e3a?w=150&auto=format&fit=crop&q=80', jobsCount: 184 },
+            { id: 'tech-2', name: 'Muhammad Rashid', category: 'Plumber', rating: 4.8, zone: 'DHA / Clifton (Karachi)', status: 'On Job', phone: '0333-9120491', photo: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80', jobsCount: 112 },
+            { id: 'tech-3', name: 'Zulqarnain Khan', category: 'AC Repair & Service', rating: 5.0, zone: 'Model Town / Gulberg (Lahore)', status: 'Available', phone: '0321-4411992', photo: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80', jobsCount: 230 },
+            { id: 'tech-4', name: 'Sajid Mehmood', category: 'Solar System Expert', rating: 4.9, zone: 'F-10 / G-11 (Islamabad)', status: 'Available', phone: '0301-5588221', photo: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&auto=format&fit=crop&q=80', jobsCount: 89 }
+        ];
+
+        let state = {
+            activeView: 'customer-home',
+            selectedCategoryFilter: 'All',
+            activeAdminFilter: 'ALL',
+            bookings: [
+                {
+                    id: 'KRG-9482',
+                    customerName: 'Usman Ghani',
+                    phone: '0300-2819201',
+                    city: 'Karachi',
+                    area: 'Gulshan-e-Iqbal',
+                    address: 'Flat 302, Block 13-C',
+                    serviceCategory: 'Electrician',
+                    subService: 'Short Circuit & Wiring Detection',
+                    urgency: 'express',
+                    date: '2026-10-29',
+                    timeSlot: 'ASAP / Express Slot',
+                    cost: 1700, // 1200 + 500 Express
+                    assignedTechId: 'tech-1',
+                    status: 'On the Way', // Requested -> Tech Assigned -> On the Way -> Work In Progress -> Completed
+                    createdAt: new Date(Date.now() - 25 * 60000).toISOString(),
+                    notes: 'Main trip switch falling down continuously when kitchen lights are turned on.'
+                },
+                {
+                    id: 'KRG-1024',
+                    customerName: 'Mrs. Saima Ali',
+                    phone: '0321-9876543',
+                    city: 'Lahore',
+                    area: 'Model Town',
+                    address: 'House 112-B, Block H',
+                    serviceCategory: 'AC Repair & Service',
+                    subService: 'AC Master Chemical Service',
+                    urgency: 'standard',
+                    date: '2026-10-30',
+                    timeSlot: '10:00 AM - 12:00 PM',
+                    cost: 2500,
+                    assignedTechId: 'tech-3',
+                    status: 'Tech Assigned',
+                    createdAt: new Date(Date.now() - 80 * 60000).toISOString(),
+                    notes: 'Outdoor unit needs deep cleaning and general cooling check.'
+                }
+            ],
+            lastCreatedId: null
+        };
+
+        // --- INITIALIZATION ---
+        window.addEventListener('DOMContentLoaded', () => {
+            renderCategoryPills();
+            renderServiceCards();
+            populateServiceCategoryDropdown();
+            onCityChange();
+            renderAdminDashboard();
+            renderTechRoster();
+            lucide.createIcons();
+
+            // Default date
+            const today = new Date().toISOString().split('T')[0];
+            const dateInput = document.getElementById('form-date');
+            if (dateInput) dateInput.value = today;
+        });
+
+        // --- VIEW SWITCHING ---
+        function switchView(viewId) {
+            const views = ['customer-home', 'customer-tracking', 'admin-dashboard'];
+            views.forEach(v => {
+                const el = document.getElementById(`view-${v}`);
+                if (el) el.classList.add('hidden');
+            });
+
+            const activeEl = document.getElementById(`view-${viewId}`);
+            if (activeEl) activeEl.classList.remove('hidden');
+
+            state.activeView = viewId;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            if (viewId === 'admin-dashboard') {
+                renderAdminDashboard();
+                renderTechRoster();
+            }
+
+            lucide.createIcons();
+        }
+
+        // --- CUSTOMER CATALOG ---
+        function renderCategoryPills() {
+            const categories = ['All', ...SERVICES_CATALOG.map(s => s.category)];
+            const container = document.getElementById('category-pills');
+
+            container.innerHTML = categories.map(cat => `
+                <button onclick="filterCategory('${cat}')" class="px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${
+                    state.selectedCategoryFilter === cat 
+                        ? 'bg-brand-600 text-white shadow-md shadow-brand-600/20' 
+                        : 'bg-white dark:bg-navy-900 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-navy-800'
+                }">
+                    ${cat}
+                </button>
+            `).join('');
+        }
+
+        function filterCategory(cat) {
+            state.selectedCategoryFilter = cat;
+            renderCategoryPills();
+            renderServiceCards();
+        }
+
+        function filterServices() {
+            renderServiceCards();
+        }
+
+        function renderServiceCards() {
+            const container = document.getElementById('services-grid');
+            const searchVal = (document.getElementById('service-search')?.value || '').toLowerCase();
+
+            const filtered = SERVICES_CATALOG.filter(s => {
+                const matchesCat = state.selectedCategoryFilter === 'All' || s.category === state.selectedCategoryFilter;
+                const matchesSearch = s.category.toLowerCase().includes(searchVal) || 
+                                      s.urduCategory.includes(searchVal) ||
+                                      s.subServices.some(sub => sub.name.toLowerCase().includes(searchVal));
+                return matchesCat && matchesSearch;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full text-center py-12 text-slate-400">
+                        <i data-lucide="search-x" class="w-10 h-10 mx-auto mb-2 opacity-50"></i>
+                        <p class="text-sm font-semibold">کوئی سروس نہیں ملی (No matching service found)</p>
+                    </div>
+                `;
+                lucide.createIcons();
+                return;
+            }
+
+            container.innerHTML = filtered.map(s => `
+                <div class="bg-white dark:bg-navy-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-sm hover:shadow-xl hover:border-brand-500/50 transition-all flex flex-col justify-between group">
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <div class="p-3 bg-brand-50 dark:bg-navy-800 text-brand-600 dark:text-brand-400 rounded-2xl group-hover:bg-brand-600 group-hover:text-white transition-colors">
+                                <i data-lucide="${s.icon}" class="w-6 h-6"></i>
+                            </div>
+                            <span class="text-[11px] font-black uppercase tracking-wider text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-navy-800 px-3 py-1 rounded-lg">
+                                Rs. ${s.basePrice} Base
+                            </span>
+                        </div>
+                        
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-600 transition-colors">${s.category}</h3>
+                            <p class="text-xs font-bold text-brand-600 dark:text-brand-400 font-urdu mt-0.5">${s.urduCategory}</p>
+                        </div>
+
+                        <!-- Sub services list -->
+                        <div class="space-y-1.5 pt-1">
+                            ${s.subServices.slice(0, 3).map(sub => `
+                                <div class="flex items-center justify-between text-xs text-slate-600 dark:text-slate-300">
+                                    <span class="truncate max-w-[180px]">• ${sub.name}</span>
+                                    <span class="font-bold text-slate-900 dark:text-slate-100 shrink-0">Rs. ${sub.price}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div class="pt-5 mt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                        <span class="text-xs font-bold text-emerald-600 dark:text-emerald-400">Verified Technicians</span>
+                        <button onclick="openBookingModal('${s.id}')" class="px-4 py-2.5 bg-brand-50 dark:bg-brand-950/80 text-brand-700 dark:text-brand-300 hover:bg-brand-600 hover:text-white font-extrabold text-xs rounded-xl transition-all flex items-center gap-1.5 border border-brand-200 dark:border-brand-800">
+                            Book Now <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+
+            lucide.createIcons();
+        }
+
+        // --- BOOKING FORM LOGIC ---
+        function populateServiceCategoryDropdown() {
+            const select = document.getElementById('form-service-select');
+            select.innerHTML = SERVICES_CATALOG.map(s => `
+                <option value="${s.id}">${s.category} (${s.urduCategory})</option>
+            `).join('');
+            onCategoryChange();
+        }
+
+        function onCategoryChange() {
+            const categoryId = document.getElementById('form-service-select').value;
+            const catObj = SERVICES_CATALOG.find(s => s.id === categoryId) || SERVICES_CATALOG[0];
+
+            const subSelect = document.getElementById('form-subservice-select');
+            subSelect.innerHTML = catObj.subServices.map(sub => `
+                <option value="${sub.name}">${sub.name} - Rs. ${sub.price}</option>
+            `).join('');
+
+            calculateEstimatedCost();
+        }
+
+        function onCityChange() {
+            const city = document.getElementById('form-city').value;
+            const areas = CITIES_DATA[city] || [];
+            const areaSelect = document.getElementById('form-area');
+
+            areaSelect.innerHTML = areas.map(a => `
+                <option value="${a}">${a}</option>
+            `).join('');
+        }
+
+        function openBookingModal(categoryId) {
+            const modal = document.getElementById('booking-modal');
+            modal.classList.remove('hidden');
+
+            if (categoryId) {
+                const select = document.getElementById('form-service-select');
+                if (select) {
+                    select.value = categoryId;
+                    onCategoryChange();
+                }
+            }
+            calculateEstimatedCost();
+            lucide.createIcons();
+        }
+
+        function closeBookingModal() {
+            document.getElementById('booking-modal').classList.add('hidden');
+        }
+
+        function calculateEstimatedCost() {
+            const categoryId = document.getElementById('form-service-select')?.value;
+            const subName = document.getElementById('form-subservice-select')?.value;
+            const urgency = document.querySelector('input[name="urgency"]:checked')?.value || 'standard';
+
+            const catObj = SERVICES_CATALOG.find(s => s.id === categoryId) || SERVICES_CATALOG[0];
+            const subObj = catObj.subServices.find(sub => sub.name === subName) || catObj.subServices[0];
+
+            const baseCost = subObj ? subObj.price : catObj.basePrice;
+            const expressFee = urgency === 'express' ? 500 : 0;
+            const total = baseCost + expressFee;
+
+            const box = document.getElementById('cost-breakdown-box');
+            box.innerHTML = `
+                <div class="flex justify-between text-xs text-slate-600 dark:text-slate-300">
+                    <span>Selected Task (${subObj ? subObj.name : catObj.category})</span>
+                    <span class="font-bold text-slate-900 dark:text-white">Rs. ${baseCost.toLocaleString()}</span>
+                </div>
+                <div class="flex justify-between text-xs text-slate-600 dark:text-slate-300">
+                    <span>Dispatch Speed (${urgency.toUpperCase()})</span>
+                    <span class="font-bold ${expressFee > 0 ? 'text-red-500' : 'text-slate-900 dark:text-white'}">+Rs. ${expressFee}</span>
+                </div>
+                <div class="flex justify-between text-sm font-black text-slate-900 dark:text-white pt-2 border-t border-brand-200 dark:border-brand-800">
+                    <span>Estimated Total Payable (Cash on Completion)</span>
+                    <span class="text-brand-600 dark:text-brand-400">Rs. ${total.toLocaleString()}</span>
+                </div>
+            `;
+        }
+
+        function handleBookingSubmit(e) {
+            e.preventDefault();
+
+            const categoryId = document.getElementById('form-service-select').value;
+            const catObj = SERVICES_CATALOG.find(s => s.id === categoryId);
+            const subName = document.getElementById('form-subservice-select').value;
+            const subObj = catObj.subServices.find(s => s.name === subName);
+            const urgency = document.querySelector('input[name="urgency"]:checked').value;
+            
+            const randomDigits = Math.floor(1000 + Math.random() * 9000);
+            const trackingId = `KRG-${randomDigits}`;
+
+            const basePrice = subObj ? subObj.price : catObj.basePrice;
+            const expressFee = urgency === 'express' ? 500 : 0;
+            const totalCost = basePrice + expressFee;
+
+            const newBooking = {
+                id: trackingId,
+                customerName: document.getElementById('form-name').value,
+                phone: document.getElementById('form-phone').value,
+                city: document.getElementById('form-city').value,
+                area: document.getElementById('form-area').value,
+                address: document.getElementById('form-address').value,
+                serviceCategory: catObj.category,
+                subService: subName,
+                urgency: urgency,
+                date: document.getElementById('form-date').value,
+                timeSlot: document.getElementById('form-time').value,
+                cost: totalCost,
+                assignedTechId: null,
+                status: 'Requested',
+                createdAt: new Date().toISOString(),
+                notes: document.getElementById('form-notes').value
+            };
+
+            state.bookings.unshift(newBooking);
+            state.lastCreatedId = trackingId;
+
+            closeBookingModal();
+
+            // Display confirmation modal
+            document.getElementById('modal-tracking-id').innerText = trackingId;
+            document.getElementById('confirmation-modal').classList.remove('hidden');
+
+            document.getElementById('booking-form').reset();
+            lucide.createIcons();
+        }
+
+        function closeConfirmationModal() {
+            document.getElementById('confirmation-modal').classList.add('hidden');
+        }
+
+        function closeModalAndTrack() {
+            closeConfirmationModal();
+            switchView('customer-tracking');
+            if (state.lastCreatedId) {
+                document.getElementById('tracking-input').value = state.lastCreatedId;
+                trackBooking();
+            }
+        }
+
+        function copyTrackingId() {
+            const idText = document.getElementById('modal-tracking-id').innerText;
+            const temp = document.createElement('input');
+            temp.value = idText;
+            document.body.appendChild(temp);
+            temp.select();
+            document.execCommand('copy');
+            document.body.removeChild(temp);
+            showToast('Tracking ID copied!');
+        }
+
+        // --- TRACKING ENGINE ---
+        function trackBooking() {
+            const inputVal = document.getElementById('tracking-input').value.trim().toUpperCase();
+            const resultContainer = document.getElementById('tracking-result');
+
+            if (!inputVal) {
+                showToast('Please enter your tracking reference code.');
+                return;
+            }
+
+            const booking = state.bookings.find(b => b.id.toUpperCase() === inputVal);
+            resultContainer.classList.remove('hidden');
+
+            if (!booking) {
+                resultContainer.innerHTML = `
+                    <div class="bg-white dark:bg-navy-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-8 text-center space-y-3">
+                        <i data-lucide="alert-circle" class="w-10 h-10 text-amber-500 mx-auto"></i>
+                        <h3 class="text-lg font-bold">بکنگ ریکارڈ نہیں ملا</h3>
+                        <p class="text-xs text-slate-500">No booking found matching tracking ID "${inputVal}". Please verify your code.</p>
+                    </div>
+                `;
+                lucide.createIcons();
+                return;
+            }
+
+            const tech = TECHNICIANS.find(t => t.id === booking.assignedTechId);
+            const timelineStages = ['Requested', 'Tech Assigned', 'On the Way', 'Work In Progress', 'Completed'];
+            const currentIdx = timelineStages.indexOf(booking.status);
+
+            resultContainer.innerHTML = `
+                <div class="bg-white dark:bg-navy-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-xl space-y-6">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-100 dark:border-slate-800">
+                        <div>
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Tracking Code</span>
+                            <h3 class="text-2xl font-black text-brand-600 dark:text-brand-400 font-mono">${booking.id}</h3>
+                        </div>
+                        <span class="px-3.5 py-1 rounded-full text-xs font-black ${
+                            booking.urgency === 'express' ? 'bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-300' : 'bg-brand-100 text-brand-800 dark:bg-brand-950 dark:text-brand-300'
+                        }">
+                            ${booking.urgency.toUpperCase()} DISPATCH
+                        </span>
+                    </div>
+
+                    <!-- Progress Stepper Timeline -->
+                    <div class="py-4">
+                        <div class="relative flex items-center justify-between w-full">
+                            <div class="absolute left-0 top-1/2 -translate-y-1/2 w-full h-1 bg-slate-200 dark:bg-slate-800 -z-0"></div>
+                            <div class="absolute left-0 top-1/2 -translate-y-1/2 h-1 bg-brand-500 transition-all duration-500 -z-0" style="width: ${(currentIdx / (timelineStages.length - 1)) * 100}%"></div>
+
+                            ${timelineStages.map((st, idx) => {
+                                const isDone = idx <= currentIdx;
+                                return `
+                                    <div class="relative z-10 flex flex-col items-center">
+                                        <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all ${
+                                            isDone ? 'bg-brand-600 text-white shadow-lg shadow-brand-600/30' : 'bg-slate-200 dark:bg-navy-800 text-slate-400'
+                                        }">
+                                            ${isDone ? '<i data-lucide="check" class="w-4 h-4"></i>' : idx + 1}
+                                        </div>
+                                        <span class="text-[10px] sm:text-xs font-bold mt-2 text-center max-w-[70px] ${isDone ? 'text-brand-600 dark:text-brand-400' : 'text-slate-400'}">
+                                            ${st}
+                                        </span>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Assigned Karigar Profile Card -->
+                    <div class="p-4 bg-slate-50 dark:bg-navy-800/60 rounded-2xl border border-slate-200 dark:border-slate-700/80 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div class="flex items-center gap-3">
+                            <img src="${tech ? tech.photo : 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80'}" class="w-14 h-14 rounded-2xl object-cover border-2 border-brand-500" alt="Tech Photo">
+                            <div>
+                                <p class="text-[11px] text-slate-400 font-semibold">Assigned Karigar (کاریگر)</p>
+                                <p class="text-sm font-bold text-slate-900 dark:text-white">${tech ? tech.name : 'Awaiting Dispatcher Assignment...'}</p>
+                                ${tech ? `<span class="text-xs text-amber-500 font-bold">★ ${tech.rating} Rating • ${tech.zone}</span>` : ''}
+                            </div>
+                        </div>
+                        ${tech ? `
+                            <a href="tel:${tech.phone}" class="px-4 py-2.5 bg-brand-600 hover:bg-brand-500 text-white font-bold text-xs rounded-xl flex items-center justify-center gap-2 shadow-sm transition-all">
+                                <i data-lucide="phone" class="w-4 h-4"></i> Call Karigar
+                            </a>
+                        ` : ''}
+                    </div>
+
+                    <!-- Order Summary Details -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                        <div class="p-3 border border-slate-100 dark:border-slate-800 rounded-xl">
+                            <span class="text-slate-400 block text-[11px]">Category & Task</span>
+                            <span class="font-bold text-slate-800 dark:text-slate-200">${booking.serviceCategory} • ${booking.subService}</span>
+                        </div>
+                        <div class="p-3 border border-slate-100 dark:border-slate-800 rounded-xl">
+                            <span class="text-slate-400 block text-[11px]">Total Estimated Bill</span>
+                            <span class="font-extrabold text-brand-600 dark:text-brand-400">Rs. ${booking.cost.toLocaleString()}</span>
+                        </div>
+                        <div class="p-3 border border-slate-100 dark:border-slate-800 rounded-xl">
+                            <span class="text-slate-400 block text-[11px]">Customer & Contact</span>
+                            <span class="font-bold text-slate-800 dark:text-slate-200">${booking.customerName} (${booking.phone})</span>
+                        </div>
+                        <div class="p-3 border border-slate-100 dark:border-slate-800 rounded-xl">
+                            <span class="text-slate-400 block text-[11px]">Address & Area</span>
+                            <span class="font-bold text-slate-800 dark:text-slate-200">${booking.address}, ${booking.area}, ${booking.city}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            lucide.createIcons();
+        }
+
+        // --- DISPATCHER & ADMIN CONTROL ---
+        function filterAdminTable(status) {
+            state.activeAdminFilter = status;
+            
+            const filters = ['ALL', 'Requested', 'TechAssigned', 'OntheWay', 'WorkInProgress', 'Completed'];
+            filters.forEach(s => {
+                const btn = document.getElementById(`admin-filter-${s}`);
+                if (!btn) return;
+                
+                let actual = s;
+                if (s === 'TechAssigned') actual = 'Tech Assigned';
+                if (s === 'OntheWay') actual = 'On the Way';
+                if (s === 'WorkInProgress') actual = 'Work In Progress';
+
+                if (status === actual || (status === 'ALL' && s === 'ALL')) {
+                    btn.className = "px-3 py-1.5 rounded-xl text-xs font-bold bg-brand-600 text-white transition-all";
+                } else {
+                    btn.className = "px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-navy-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 transition-all";
+                }
+            });
+
+            renderAdminDashboard();
+        }
+
+        function renderAdminDashboard() {
+            const totalBookings = state.bookings.length;
+            const activeDispatches = state.bookings.filter(b => b.status !== 'Completed').length;
+            const availableTechs = TECHNICIANS.filter(t => t.status === 'Available').length;
+            const revenue = state.bookings.reduce((sum, b) => sum + b.cost, 0);
+
+            document.getElementById('stat-total-bookings').innerText = totalBookings;
+            document.getElementById('stat-active-dispatches').innerText = activeDispatches;
+            document.getElementById('stat-techs-available').innerText = availableTechs;
+            document.getElementById('stat-total-revenue').innerText = `Rs. ${revenue.toLocaleString()}`;
+
+            const tbody = document.getElementById('admin-dispatches-tbody');
+            const filtered = state.bookings.filter(b => {
+                if (state.activeAdminFilter === 'ALL') return true;
+                return b.status === state.activeAdminFilter;
+            });
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="text-center py-8 text-slate-400 font-semibold">
+                            No active dispatches found for filter: "${state.activeAdminFilter}".
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = filtered.map(b => {
+                const statusStyles = {
+                    'Requested': 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300',
+                    'Tech Assigned': 'bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300',
+                    'On the Way': 'bg-teal-100 text-teal-800 dark:bg-teal-950 dark:text-teal-300',
+                    'Work In Progress': 'bg-purple-100 text-purple-800 dark:bg-purple-950 dark:text-purple-300',
+                    'Completed': 'bg-brand-100 text-brand-800 dark:bg-brand-950 dark:text-brand-300'
+                };
+
+                return `
+                    <tr class="hover:bg-slate-50 dark:hover:bg-navy-800/40 transition-colors">
+                        <td class="py-3.5 px-4">
+                            <span class="font-mono font-black text-brand-600 dark:text-brand-400 block">${b.id}</span>
+                            <span class="font-bold text-slate-900 dark:text-white block">${b.customerName}</span>
+                            <span class="text-[11px] text-slate-400">${b.phone}</span>
+                        </td>
+
+                        <td class="py-3.5 px-4">
+                            <span class="font-bold text-slate-800 dark:text-slate-200 block">${b.serviceCategory}</span>
+                            <span class="text-[11px] text-slate-400 block">${b.subService}</span>
+                        </td>
+
+                        <td class="py-3.5 px-4">
+                            <span class="block text-slate-800 dark:text-slate-200 font-medium">${b.city}</span>
+                            <span class="text-[11px] text-slate-400 block truncate max-w-[130px]">${b.area}</span>
+                        </td>
+
+                        <td class="py-3.5 px-4">
+                            <span class="text-xs font-extrabold ${b.urgency === 'express' ? 'text-red-500' : 'text-slate-500'}">
+                                ${b.urgency.toUpperCase()}
+                            </span>
+                            <span class="block font-black text-slate-900 dark:text-white">Rs. ${b.cost.toLocaleString()}</span>
+                        </td>
+
+                        <td class="py-3.5 px-4">
+                            <select onchange="assignTechnician('${b.id}', this.value)" class="px-2.5 py-1.5 bg-slate-100 dark:bg-navy-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                                <option value="">-- Assign Karigar --</option>
+                                ${TECHNICIANS.map(t => `
+                                    <option value="${t.id}" ${b.assignedTechId === t.id ? 'selected' : ''}>${t.name} (${t.category})</option>
+                                `).join('')}
+                            </select>
+                        </td>
+
+                        <td class="py-3.5 px-4">
+                            <select onchange="updateBookingStatus('${b.id}', this.value)" class="px-2.5 py-1 rounded-full text-xs font-black border-none ${statusStyles[b.status] || 'bg-slate-100'} focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                                <option value="Requested" ${b.status === 'Requested' ? 'selected' : ''}>Requested</option>
+                                <option value="Tech Assigned" ${b.status === 'Tech Assigned' ? 'selected' : ''}>Tech Assigned</option>
+                                <option value="On the Way" ${b.status === 'On the Way' ? 'selected' : ''}>On the Way</option>
+                                <option value="Work In Progress" ${b.status === 'Work In Progress' ? 'selected' : ''}>Work In Progress</option>
+                                <option value="Completed" ${b.status === 'Completed' ? 'selected' : ''}>Completed</option>
+                            </select>
+                        </td>
+
+                        <td class="py-3.5 px-4 text-right">
+                            <button onclick="deleteBooking('${b.id}')" class="p-1.5 text-slate-400 hover:text-red-500 rounded-lg hover:bg-slate-100 dark:hover:bg-navy-800 transition-colors" title="Cancel Booking">
+                                <i data-lucide="trash-2" class="w-4 h-4"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            lucide.createIcons();
+        }
+
+        function renderTechRoster() {
+            const container = document.getElementById('tech-roster-grid');
+            container.innerHTML = TECHNICIANS.map(t => `
+                <div class="bg-white dark:bg-navy-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-sm space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black ${
+                            t.status === 'Available' ? 'bg-brand-100 text-brand-800 dark:bg-brand-950 dark:text-brand-300' : 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300'
+                        }">
+                            ${t.status.toUpperCase()}
+                        </span>
+                        <span class="text-xs font-bold text-amber-500">★ ${t.rating}</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <img src="${t.photo}" class="w-10 h-10 rounded-xl object-cover border border-slate-200 dark:border-slate-700" alt="${t.name}">
+                        <div>
+                            <h4 class="font-bold text-slate-900 dark:text-white text-sm">${t.name}</h4>
+                            <p class="text-[11px] text-slate-400">${t.category}</p>
+                        </div>
+                    </div>
+
+                    <div class="text-[11px] text-slate-500 dark:text-slate-400 space-y-1 pt-1 border-t border-slate-100 dark:border-slate-800">
+                        <p class="flex items-center gap-1"><i data-lucide="map-pin" class="w-3 h-3 text-brand-500"></i> ${t.zone}</p>
+                        <p class="flex items-center gap-1"><i data-lucide="check-circle" class="w-3 h-3 text-brand-500"></i> ${t.jobsCount} Completed Jobs</p>
+                    </div>
+                </div>
+            `).join('');
+
+            lucide.createIcons();
+        }
+
+        function assignTechnician(bookingId, techId) {
+            const booking = state.bookings.find(b => b.id === bookingId);
+            if (booking) {
+                booking.assignedTechId = techId || null;
+                if (techId && booking.status === 'Requested') {
+                    booking.status = 'Tech Assigned';
+                }
+                showToast(`Karigar assigned to ${bookingId}`);
+                renderAdminDashboard();
+            }
+        }
+
+        function updateBookingStatus(bookingId, newStatus) {
+            const booking = state.bookings.find(b => b.id === bookingId);
+            if (booking) {
+                booking.status = newStatus;
+                showToast(`Status updated to ${newStatus}`);
+                renderAdminDashboard();
+            }
+        }
+
+        function deleteBooking(bookingId) {
+            state.bookings = state.bookings.filter(b => b.id !== bookingId);
+            showToast(`Booking ${bookingId} deleted`);
+            renderAdminDashboard();
+        }
+
+        function seedSampleBooking() {
+            const randomCode = `KRG-${Math.floor(1000 + Math.random() * 9000)}`;
+            const cities = ['Karachi', 'Lahore', 'Islamabad'];
+            const city = cities[Math.floor(Math.random() * cities.length)];
+            const areas = CITIES_DATA[city];
+            const area = areas[Math.floor(Math.random() * areas.length)];
+            const cat = SERVICES_CATALOG[Math.floor(Math.random() * SERVICES_CATALOG.length)];
+            const sub = cat.subServices[0];
+
+            state.bookings.unshift({
+                id: randomCode,
+                customerName: 'Simulated Client ' + Math.floor(Math.random() * 100),
+                phone: '0300-' + Math.floor(1000000 + Math.random() * 9000000),
+                city: city,
+                area: area,
+                address: 'House ' + Math.floor(Math.random() * 50),
+                serviceCategory: cat.category,
+                subService: sub.name,
+                urgency: 'express',
+                date: new Date().toISOString().split('T')[0],
+                timeSlot: 'ASAP / Express Slot',
+                cost: sub.price + 500,
+                assignedTechId: null,
+                status: 'Requested',
+                createdAt: new Date().toISOString(),
+                notes: 'Express auto-simulated request.'
+            });
+
+            showToast(`New Express Job ${randomCode} added!`);
+            renderAdminDashboard();
+        }
+
+        // --- UTILITY FUNCTIONS ---
+        function toggleDarkMode() {
+            document.documentElement.classList.toggle('dark');
+            const isDark = document.documentElement.classList.contains('dark');
+            document.getElementById('theme-icon-sun').classList.toggle('hidden', !isDark);
+            document.getElementById('theme-icon-moon').classList.toggle('hidden', isDark);
+        }
+
+        function toggleMobileMenu() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-message').innerText = msg;
+            toast.classList.remove('hidden');
+
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
